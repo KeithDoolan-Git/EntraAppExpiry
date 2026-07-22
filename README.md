@@ -17,7 +17,7 @@ Every Entra ID app registration's client secrets and certificates have an expiry
 Not yet published to the PowerShell Gallery. Until then, install from source:
 
 ```powershell
-git clone https://github.com/REPLACE_WITH_GITHUB_OWNER/EntraAppExpiry.git
+git clone https://github.com/KeithDoolan-Git/EntraAppExpiry.git
 Import-Module ./EntraAppExpiry/EntraAppExpiry/EntraAppExpiry.psd1
 ```
 

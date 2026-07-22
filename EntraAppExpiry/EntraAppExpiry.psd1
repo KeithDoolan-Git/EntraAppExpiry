@@ -28,8 +28,8 @@
     PrivateData          = @{
         PSData = @{
             Tags       = @('Azure', 'AzureAD', 'EntraID', 'Security', 'Certificates', 'Secrets', 'Expiry', 'MicrosoftGraph')
-            LicenseUri = 'https://github.com/REPLACE_WITH_GITHUB_OWNER/EntraAppExpiry/blob/main/LICENSE'
-            ProjectUri = 'https://github.com/REPLACE_WITH_GITHUB_OWNER/EntraAppExpiry'
+            LicenseUri = 'https://github.com/KeithDoolan-Git/EntraAppExpiry/blob/main/LICENSE'
+            ProjectUri = 'https://github.com/KeithDoolan-Git/EntraAppExpiry'
             ReleaseNotes = 'Initial release: Connect-AppExpiry, Get-AppExpiry, Export-AppExpiryReport.'
         }
     }
