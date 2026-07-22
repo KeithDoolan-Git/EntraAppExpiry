@@ -1,0 +1,22 @@
+# PowerShell
+*.ps1xml.bak
+TestResults/
+*.trx
+
+# Build/output
+bin/
+obj/
+out/
+
+# Editor
+.vscode/
+*.user
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Local scratch reports
+*.csv
+*.html
+!/EntraAppExpiry/**/*.html

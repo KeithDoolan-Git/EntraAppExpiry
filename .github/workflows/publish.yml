@@ -1,0 +1,19 @@
+name: Publish to PowerShell Gallery
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish module
+        shell: pwsh
+        env:
+          NUGET_KEY: ${{ secrets.PSGALLERY_API_KEY }}
+        run: |
+          Publish-Module -Path ./EntraAppExpiry -NuGetApiKey $env:NUGET_KEY -Repository PSGallery
