@@ -22,7 +22,7 @@
     Thumbprint of the LocalMachine\My certificate, passed straight through.
 
     .PARAMETER OutputFolder
-    Folder reports are written to. Default C:\EntraAppExpiry\Reports.
+    Folder reports are written to. Default C:\EntraAppAnalysis\Reports.
 
     .PARAMETER ExpiringInDays
     Expiry window in days. Default 30.
@@ -31,7 +31,7 @@
     Report format: Csv or Html. Default Csv.
 
     .PARAMETER TaskName
-    Name of the scheduled task. Default "EntraAppExpiry - Daily Credential Check".
+    Name of the scheduled task. Default "EntraAppAnalysis - Daily Credential Expiry Check".
 
     .PARAMETER At
     Time of day to run daily, e.g. '07:00'. Default 07:00.
@@ -60,7 +60,7 @@ param(
     [string]$CertificateThumbprint,
 
     [Parameter()]
-    [string]$OutputFolder = 'C:\EntraAppExpiry\Reports',
+    [string]$OutputFolder = 'C:\EntraAppAnalysis\Reports',
 
     [Parameter()]
     [int]$ExpiringInDays = 30,
@@ -70,7 +70,7 @@ param(
     [string]$Format = 'Csv',
 
     [Parameter()]
-    [string]$TaskName = 'EntraAppExpiry - Daily Credential Check',
+    [string]$TaskName = 'EntraAppAnalysis - Daily Credential Expiry Check',
 
     [Parameter()]
     [string]$At = '07:00',
@@ -115,7 +115,7 @@ Register-ScheduledTask -TaskName $TaskName `
     -Trigger $trigger `
     -Principal $principal `
     -Settings $settings `
-    -Description 'Runs EntraAppExpiry to report on expiring Entra ID app client secrets/certificates.' `
+    -Description 'Runs EntraAppAnalysis to report on expiring Entra ID app client secrets/certificates.' `
     -Force | Out-Null
 
 Write-Output "Registered scheduled task '$TaskName' to run daily at $At as SYSTEM."

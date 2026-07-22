@@ -19,4 +19,4 @@ Thumbs.db
 # Local scratch reports
 *.csv
 *.html
-!/EntraAppExpiry/**/*.html
+!/EntraAppAnalysis/**/*.html

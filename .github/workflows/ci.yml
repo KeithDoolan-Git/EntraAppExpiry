@@ -22,7 +22,7 @@ jobs:
       - name: Lint
         shell: pwsh
         run: |
-          $results = Invoke-ScriptAnalyzer -Path ./EntraAppExpiry -Recurse -Severity Warning, Error
+          $results = Invoke-ScriptAnalyzer -Path ./EntraAppAnalysis -Recurse -Severity Warning, Error
           $results | Format-Table -AutoSize
           if ($results | Where-Object Severity -eq 'Error') {
             throw 'PSScriptAnalyzer found errors.'

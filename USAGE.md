@@ -1,4 +1,4 @@
-# How to use EntraAppExpiry
+# How to use EntraAppAnalysis
 
 Step-by-step guide covering both ways to use this module:
 
@@ -18,11 +18,11 @@ Step-by-step guide covering both ways to use this module:
 ## 2. Get the code
 
 ```powershell
-git clone https://github.com/KeithDoolan-Git/EntraAppExpiry.git
-cd EntraAppExpiry
+git clone https://github.com/KeithDoolan-Git/EntraAppAnalysis.git
+cd EntraAppAnalysis
 ```
 
-(Once the module is published to the PowerShell Gallery, `Install-Module EntraAppExpiry` will work too — see the README for status.)
+(Once the module is published to the PowerShell Gallery, `Install-Module EntraAppAnalysis` will work too — see the README for status.)
 
 ## 3. Install the Graph dependencies
 
@@ -31,7 +31,7 @@ Install-Module Microsoft.Graph.Authentication -Scope CurrentUser
 Install-Module Microsoft.Graph.Applications -Scope CurrentUser
 ```
 
-(If you install the module itself via `Install-Module EntraAppExpiry` later, these are pulled in automatically as declared dependencies.)
+(If you install the module itself via `Install-Module EntraAppAnalysis` later, these are pulled in automatically as declared dependencies.)
 
 ---
 
@@ -40,13 +40,13 @@ Install-Module Microsoft.Graph.Applications -Scope CurrentUser
 1. Import the module:
 
    ```powershell
-   Import-Module .\EntraAppExpiry\EntraAppExpiry.psd1
+   Import-Module .\EntraAppAnalysis\EntraAppAnalysis.psd1
    ```
 
 2. Sign in:
 
    ```powershell
-   Connect-AppExpiry
+   Connect-AppAnalysis
    ```
 
    This opens an interactive Microsoft sign-in prompt and requests `Application.Read.All`. The first time, an admin in your tenant may need to consent to that permission.
@@ -54,7 +54,7 @@ Install-Module Microsoft.Graph.Applications -Scope CurrentUser
 3. Check what's expiring:
 
    ```powershell
-   Get-AppExpiry -ExpiringInDays 30
+   Get-AppAnalysis -ExpiringInDays 30
    ```
 
    This lists every client secret and certificate on any app registration in your tenant expiring in the next 30 days, with `DaysUntilExpiry` for each.
@@ -62,7 +62,7 @@ Install-Module Microsoft.Graph.Applications -Scope CurrentUser
 4. Export a report if you want a file to share:
 
    ```powershell
-   Get-AppExpiry -ExpiringInDays 30 | Export-AppExpiryReport -Path .\expiry-report.html -Format Html
+   Get-AppAnalysis -ExpiringInDays 30 | Export-AppAnalysisReport -Path .\expiry-report.html -Format Html
    ```
 
 That's the whole interactive flow.
@@ -77,7 +77,7 @@ This is for running the check automatically on a server (e.g. daily) via Windows
 
 Do this once, in the Entra admin center (or Azure Portal → Microsoft Entra ID).
 
-1. **App registrations → New registration.** Name it something like `EntraAppExpiry Reporter`. Single tenant is fine. Register it.
+1. **App registrations → New registration.** Name it something like `EntraAppAnalysis Reporter`. Single tenant is fine. Register it.
 2. Note the **Application (client) ID** and **Directory (tenant) ID** shown on the app's Overview page — you'll need both.
 3. **API permissions → Add a permission → Microsoft Graph → Application permissions** → search for and add `Application.Read.All`.
 4. Click **Grant admin consent** for your tenant (requires admin rights). Unattended app-only permissions must be consented — there's no interactive prompt to fall back on.
@@ -85,14 +85,14 @@ Do this once, in the Entra admin center (or Azure Portal → Microsoft Entra ID)
 
    ```powershell
    $cert = New-SelfSignedCertificate `
-       -Subject "CN=EntraAppExpiry" `
+       -Subject "CN=EntraAppAnalysis" `
        -CertStoreLocation "Cert:\LocalMachine\My" `
        -KeyExportPolicy Exportable `
        -KeySpec Signature `
        -KeyLength 2048 `
        -NotAfter (Get-Date).AddYears(2)
 
-   Export-Certificate -Cert $cert -FilePath "C:\EntraAppExpiry\EntraAppExpiry.cer"
+   Export-Certificate -Cert $cert -FilePath "C:\EntraAppAnalysis\EntraAppAnalysis.cer"
    $cert.Thumbprint
    ```
 
@@ -109,7 +109,7 @@ You now have three values: **Tenant ID**, **Client ID**, **Certificate thumbprin
 Before scheduling anything, run it once by hand on the server to confirm it works:
 
 ```powershell
-cd C:\path\to\EntraAppExpiry\scripts
+cd C:\path\to\EntraAppAnalysis\scripts
 .\Invoke-AppExpiryCheck.ps1 `
     -TenantId '<tenant-id>' `
     -ClientId '<client-id>' `
@@ -128,12 +128,12 @@ Once the manual run works, register it to run automatically (also from an elevat
     -TenantId '<tenant-id>' `
     -ClientId '<client-id>' `
     -CertificateThumbprint '<thumbprint>' `
-    -OutputFolder 'C:\EntraAppExpiry\Reports' `
+    -OutputFolder 'C:\EntraAppAnalysis\Reports' `
     -ExpiringInDays 30 `
     -At '07:00'
 ```
 
-This creates a Task Scheduler task named **"EntraAppExpiry - Daily Credential Check"** that runs daily at the time you specify, as SYSTEM, calling `Invoke-AppExpiryCheck.ps1` with the arguments you gave it.
+This creates a Task Scheduler task named **"EntraAppAnalysis - Daily Credential Expiry Check"** that runs daily at the time you specify, as SYSTEM, calling `Invoke-AppExpiryCheck.ps1` with the arguments you gave it.
 
 ### Part 6 — Verify it
 
@@ -147,8 +147,8 @@ This creates a Task Scheduler task named **"EntraAppExpiry - Daily Credential Ch
 
 | Symptom | Likely cause |
 |---|---|
-| `Not connected to Microsoft Graph` | `Connect-AppExpiry` wasn't called first, or it failed silently — check for errors above it |
+| `Not connected to Microsoft Graph` | `Connect-AppAnalysis` wasn't called first, or it failed silently — check for errors above it |
 | Task Scheduler task shows "Last Run Result" as a failure, cert-related error | Certificate isn't in `LocalMachine\My` (SYSTEM can't read certs from a user's `CurrentUser` store) |
-| `Import-Module EntraAppExpiry` fails when run by the scheduled task | The Graph modules were installed with `-Scope CurrentUser` under your own profile, which SYSTEM can't see — reinstall with `-Scope AllUsers`, or install for the account the task actually runs as |
-| `Get-AppExpiry` runs but returns nothing unexpectedly | Check `-ExpiringInDays` — it excludes already-expired credentials by default; add `-IncludeExpired` to confirm data is there at all |
+| `Import-Module EntraAppAnalysis` fails when run by the scheduled task | The Graph modules were installed with `-Scope CurrentUser` under your own profile, which SYSTEM can't see — reinstall with `-Scope AllUsers`, or install for the account the task actually runs as |
+| `Get-AppAnalysis` runs but returns nothing unexpectedly | Check `-ExpiringInDays` — it excludes already-expired credentials by default; add `-IncludeExpired` to confirm data is there at all |
 | App-only auth fails with a permissions error | `Application.Read.All` wasn't granted as an **application** permission, or admin consent wasn't completed |

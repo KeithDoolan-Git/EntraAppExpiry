@@ -16,4 +16,4 @@ jobs:
         env:
           NUGET_KEY: ${{ secrets.PSGALLERY_API_KEY }}
         run: |
-          Publish-Module -Path ./EntraAppExpiry -NuGetApiKey $env:NUGET_KEY -Repository PSGallery
+          Publish-Module -Path ./EntraAppAnalysis -NuGetApiKey $env:NUGET_KEY -Repository PSGallery

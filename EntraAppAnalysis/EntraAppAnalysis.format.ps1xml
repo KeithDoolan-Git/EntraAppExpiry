@@ -2,9 +2,9 @@
 <Configuration>
   <ViewDefinitions>
     <View>
-      <Name>EntraAppExpiry.Credential</Name>
+      <Name>EntraAppAnalysis.Credential</Name>
       <ViewSelectedBy>
-        <TypeName>EntraAppExpiry.Credential</TypeName>
+        <TypeName>EntraAppAnalysis.Credential</TypeName>
       </ViewSelectedBy>
       <TableControl>
         <TableHeaders>

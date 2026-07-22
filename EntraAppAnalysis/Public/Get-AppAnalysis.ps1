@@ -1,4 +1,4 @@
-function Get-AppExpiry {
+function Get-AppAnalysis {
     <#
         .SYNOPSIS
         Reports client secret and certificate expiry for Entra ID app registrations.
@@ -6,7 +6,7 @@ function Get-AppExpiry {
         .DESCRIPTION
         Enumerates app registrations via Microsoft Graph and returns one object per
         credential (password secret or certificate) with its expiry date and days
-        remaining. Requires Connect-AppExpiry to have been run first.
+        remaining. Requires Connect-AppAnalysis to have been run first.
 
         .PARAMETER ExpiringInDays
         Only return credentials expiring within this many days.
@@ -15,12 +15,12 @@ function Get-AppExpiry {
         Include credentials that have already expired. Excluded by default.
 
         .EXAMPLE
-        Get-AppExpiry -ExpiringInDays 30
+        Get-AppAnalysis -ExpiringInDays 30
 
         Lists every client secret/certificate expiring in the next 30 days.
     #>
     [CmdletBinding()]
-    [OutputType('EntraAppExpiry.Credential')]
+    [OutputType('EntraAppAnalysis.Credential')]
     param(
         [Parameter()]
         [ValidateRange(0, [int]::MaxValue)]
@@ -40,7 +40,7 @@ function Get-AppExpiry {
 
         foreach ($secret in $app.PasswordCredentials) {
             $credentials.Add([pscustomobject]@{
-                    PSTypeName      = 'EntraAppExpiry.Credential'
+                    PSTypeName      = 'EntraAppAnalysis.Credential'
                     AppDisplayName  = $app.DisplayName
                     AppId           = $app.AppId
                     ObjectId        = $app.Id
@@ -55,7 +55,7 @@ function Get-AppExpiry {
 
         foreach ($cert in $app.KeyCredentials) {
             $credentials.Add([pscustomobject]@{
-                    PSTypeName      = 'EntraAppExpiry.Credential'
+                    PSTypeName      = 'EntraAppAnalysis.Credential'
                     AppDisplayName  = $app.DisplayName
                     AppId           = $app.AppId
                     ObjectId        = $app.Id

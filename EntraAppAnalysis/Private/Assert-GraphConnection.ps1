@@ -7,6 +7,6 @@ function Assert-GraphConnection {
     param()
 
     if (-not (Get-MgContext)) {
-        throw "Not connected to Microsoft Graph. Run 'Connect-AppExpiry' first."
+        throw "Not connected to Microsoft Graph. Run 'Connect-AppAnalysis' first."
     }
 }

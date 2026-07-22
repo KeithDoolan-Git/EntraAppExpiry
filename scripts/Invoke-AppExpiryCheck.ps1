@@ -59,16 +59,16 @@ $ErrorActionPreference = 'Stop'
 
 # Prefer a sibling checkout of the module (git clone layout); fall back to
 # an installed copy on $env:PSModulePath (e.g. after Install-Module).
-$moduleManifest = Join-Path $PSScriptRoot '..\EntraAppExpiry\EntraAppExpiry.psd1'
+$moduleManifest = Join-Path $PSScriptRoot '..\EntraAppAnalysis\EntraAppAnalysis.psd1'
 if (Test-Path -Path $moduleManifest) {
     Import-Module $moduleManifest -Force
 }
 else {
-    Import-Module EntraAppExpiry -ErrorAction Stop
+    Import-Module EntraAppAnalysis -ErrorAction Stop
 }
 
 try {
-    Connect-AppExpiry -TenantId $TenantId -ClientId $ClientId -CertificateThumbprint $CertificateThumbprint
+    Connect-AppAnalysis -TenantId $TenantId -ClientId $ClientId -CertificateThumbprint $CertificateThumbprint
 
     if (-not (Test-Path -Path $OutputFolder)) {
         New-Item -Path $OutputFolder -ItemType Directory -Force | Out-Null
@@ -78,10 +78,10 @@ try {
     $extension = if ($Format -eq 'Html') { 'html' } else { 'csv' }
     $reportPath = Join-Path $OutputFolder "AppExpiryReport_$timestamp.$extension"
 
-    $results = Get-AppExpiry -ExpiringInDays $ExpiringInDays
+    $results = Get-AppAnalysis -ExpiringInDays $ExpiringInDays
 
     if ($results) {
-        $results | Export-AppExpiryReport -Path $reportPath -Format $Format
+        $results | Export-AppAnalysisReport -Path $reportPath -Format $Format
         Write-Output "Wrote report with $($results.Count) expiring credential(s) to $reportPath"
     }
     else {

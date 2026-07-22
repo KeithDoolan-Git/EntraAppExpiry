@@ -1,19 +1,19 @@
-function Connect-AppExpiry {
+function Connect-AppAnalysis {
     <#
         .SYNOPSIS
-        Connects to Microsoft Graph with the scopes EntraAppExpiry needs.
+        Connects to Microsoft Graph with the scopes EntraAppAnalysis needs.
 
         .DESCRIPTION
         Thin wrapper around Connect-MgGraph. Supports interactive/delegated sign-in
         for ad hoc use, or app-only certificate auth for scheduled/unattended runs.
 
         .EXAMPLE
-        Connect-AppExpiry
+        Connect-AppAnalysis
 
         Interactive sign-in with Application.Read.All.
 
         .EXAMPLE
-        Connect-AppExpiry -TenantId $tenantId -ClientId $clientId -CertificateThumbprint $thumbprint
+        Connect-AppAnalysis -TenantId $tenantId -ClientId $clientId -CertificateThumbprint $thumbprint
 
         Unattended app-only sign-in for use in a scheduled task.
     #>

@@ -1,12 +1,12 @@
 BeforeAll {
-    $ModulePath = Resolve-Path "$PSScriptRoot/../EntraAppExpiry/EntraAppExpiry.psd1"
+    $ModulePath = Resolve-Path "$PSScriptRoot/../EntraAppAnalysis/EntraAppAnalysis.psd1"
     Import-Module $ModulePath -Force
 }
 
-Describe 'Get-AppExpiry' {
+Describe 'Get-AppAnalysis' {
     BeforeAll {
-        Mock -ModuleName EntraAppExpiry Get-MgContext { @{ TenantId = 'test-tenant'; Account = 'test@example.com' } }
-        Mock -ModuleName EntraAppExpiry Get-MgApplication {
+        Mock -ModuleName EntraAppAnalysis Get-MgContext { @{ TenantId = 'test-tenant'; Account = 'test@example.com' } }
+        Mock -ModuleName EntraAppAnalysis Get-MgApplication {
             @(
                 [pscustomobject]@{
                     Id                  = '11111111-1111-1111-1111-111111111111'
@@ -41,29 +41,29 @@ Describe 'Get-AppExpiry' {
     }
 
     It 'Returns credentials expiring within the given window' {
-        $result = Get-AppExpiry -ExpiringInDays 30
+        $result = Get-AppAnalysis -ExpiringInDays 30
         $result.Count | Should -Be 1
         $result[0].CredentialType | Should -Be 'Secret'
         $result[0].AppDisplayName | Should -Be 'Test App'
     }
 
     It 'Excludes credentials outside the expiry window' {
-        $result = Get-AppExpiry -ExpiringInDays 5
+        $result = Get-AppAnalysis -ExpiringInDays 5
         $result.Count | Should -Be 0
     }
 
     It 'Excludes already-expired credentials by default' {
-        $result = Get-AppExpiry
+        $result = Get-AppAnalysis
         $result.AppDisplayName | Should -Not -Contain 'Expired App'
     }
 
     It 'Includes expired credentials when -IncludeExpired is set' {
-        $result = Get-AppExpiry -IncludeExpired
+        $result = Get-AppAnalysis -IncludeExpired
         $result.AppDisplayName | Should -Contain 'Expired App'
     }
 
     It 'Throws when not connected to Graph' {
-        Mock -ModuleName EntraAppExpiry Get-MgContext { $null }
-        { Get-AppExpiry } | Should -Throw
+        Mock -ModuleName EntraAppAnalysis Get-MgContext { $null }
+        { Get-AppAnalysis } | Should -Throw
     }
 }

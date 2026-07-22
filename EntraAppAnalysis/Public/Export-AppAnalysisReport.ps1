@@ -1,15 +1,15 @@
-function Export-AppExpiryReport {
+function Export-AppAnalysisReport {
     <#
         .SYNOPSIS
-        Exports Get-AppExpiry output to CSV or HTML.
+        Exports Get-AppAnalysis output to CSV or HTML.
 
         .EXAMPLE
-        Get-AppExpiry -ExpiringInDays 30 | Export-AppExpiryReport -Path .\report.html -Format Html
+        Get-AppAnalysis -ExpiringInDays 30 | Export-AppAnalysisReport -Path .\report.html -Format Html
     #>
     [CmdletBinding()]
     param(
         [Parameter(Mandatory, ValueFromPipeline)]
-        [PSTypeName('EntraAppExpiry.Credential')]
+        [PSTypeName('EntraAppAnalysis.Credential')]
         [psobject[]]$InputObject,
 
         [Parameter(Mandatory)]
