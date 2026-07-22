@@ -6,6 +6,8 @@ A small, dependency-light PowerShell module that reports on Entra ID (Azure AD) 
 
 Every Entra ID app registration's client secrets and certificates have an expiry date. When one lapses silently, whatever depends on it breaks with no warning. This module gives you a quick way to see what's expiring, on demand or on a schedule.
 
+**New here?** [USAGE.md](USAGE.md) has the full step-by-step walkthrough, including unattended/scheduled setup. This README is the short version.
+
 ## Requirements
 
 - PowerShell 5.1+ or PowerShell 7+
@@ -51,6 +53,19 @@ Get-AppExpiry -ExpiringInDays 14 | Export-AppExpiryReport -Path .\expiry-report.
 
 The app registration used for this needs the `Application.Read.All` **application** permission, admin-consented.
 
+### Running it on a schedule (Task Scheduler)
+
+`scripts/` has a ready-made runner and a registration helper — no need to hand-build a scheduled task:
+
+```powershell
+# One-time: create the scheduled task (elevated PowerShell, on the server)
+.\scripts\Register-AppExpiryScheduledTask.ps1 `
+    -TenantId $tenantId -ClientId $clientId -CertificateThumbprint $thumbprint `
+    -OutputFolder 'C:\EntraAppExpiry\Reports' -ExpiringInDays 30 -At '07:00'
+```
+
+This registers a daily task that runs `scripts/Invoke-AppExpiryCheck.ps1`, which connects, checks, and writes a timestamped CSV/HTML report — no file is written if nothing is expiring. Full setup (including the one-time app registration + certificate steps) is in [USAGE.md](USAGE.md).
+
 ## Cmdlets
 
 | Cmdlet | Description |
@@ -61,9 +76,7 @@ The app registration used for this needs the `Application.Read.All` **applicatio
 
 ## Roadmap
 
-- [ ] `Send-AppExpiryAlert` — email / Teams / Slack webhook notifications
 - [ ] Publish to PowerShell Gallery
-- [ ] Sample scheduled task / GitHub Actions runbook for recurring checks
 
 ## Development
 
